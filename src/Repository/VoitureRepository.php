@@ -15,7 +15,20 @@ class VoitureRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Voiture::class);
     }
+    public function findByModeleId(int $modeleId): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(dql:'
+        SELECT v, m
+        FROM App\Entity\Voiture v
+        JOIN v.modele m
+        WHERE m.id = :mid
+        ORDER BY v.id ASC
+        ')
 
+            ->setParameter('modeleId', $modeleId);
+    return $query->getResult();
+    }
     //    /**
     //     * @return Voiture[] Returns an array of Voiture objects
     //     */

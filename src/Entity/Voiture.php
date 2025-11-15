@@ -23,7 +23,6 @@ class Voiture
     private ?\DateTime $Date_Mise_En_Marche = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Modele = null;
 
     #[ORM\Column]
     private ?float $Prix_jour = null;
@@ -39,6 +38,10 @@ class Voiture
      */
     #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'voiture')]
     private Collection $location;
+
+    #[ORM\ManyToOne(inversedBy: 'voitures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Modele $modele = null;
 
     public function __construct()
     {

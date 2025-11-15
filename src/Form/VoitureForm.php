@@ -14,7 +14,12 @@ class VoitureForm extends AbstractType
     $builder
         ->add('serie', TextType::class)
         ->add('dateMiseEnMarche', DateType::class)
-        ->add('modele', TextType::class)
+        ->add('modele', EntityType::class, [
+            'class' => Modele::class,
+            'choice_label' => 'libelle',
+            'placeholder' => 'Choisir un modèle',
+            'label' => 'Modèle'
+        ])
         ->add('prixJour', NumberType::class);
     }
 

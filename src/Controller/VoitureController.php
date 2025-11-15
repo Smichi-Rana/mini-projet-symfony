@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Modele;
 use App\Entity\Voiture;
 use App\Form\VoitureForm;
+use App\Repository\ModeleRepository;
 use App\Repository\VoitureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -69,4 +71,21 @@ class VoitureController extends AbstractController
             'editFormVoiture' => $editform->createView(),
         ]);
     }
+#[Route('/modeles')]
+#[Route ('/voitures_par-modele', name: 'voitures_par_modele')]
+public function voitureParModele(Request $request, EntityManagerInterface $em, VoitureRepository $vr): Response
+{
+    $modeleId = $request->query->get('modele');
+    $voiture = [];
+    if ($modeleId) {
+        $voitures = $vr->findByModele((int)$modeleId);
+    }
+
+    $modeles = $em->getRepository(Modele::class)->findAll();
+    return $this->render('voiture/voitureParModele.html.twig', [
+        'voitures' => $voiture,
+        'modeles' => $modeles,
+        'selectedModele' => $modeleId,
+    ]);
+}
 }
