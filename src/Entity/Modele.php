@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\ModeleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 
 #[ORM\Entity(repositoryClass: ModeleRepository::class)]
 class Modele
@@ -90,4 +90,10 @@ class Modele
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->libelle ?? '';
+    }
+
 }

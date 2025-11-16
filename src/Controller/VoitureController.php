@@ -35,8 +35,8 @@ class VoitureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($voiture);
             $em->flush();
-
-            return $this->redirectToRoute('app_voitures'); // Corrigé
+            $this->addFlash('success', 'Voiture ajoutée');
+            return $this->redirectToRoute('add_voiture'); // Corrigé
         }
 
         return $this->render('voiture/addVoiture.html.twig', [
@@ -71,21 +71,21 @@ class VoitureController extends AbstractController
             'editFormVoiture' => $editform->createView(),
         ]);
     }
-#[Route('/modeles')]
-#[Route ('/voitures_par-modele', name: 'voitures_par_modele')]
-public function voitureParModele(Request $request, EntityManagerInterface $em, VoitureRepository $vr): Response
-{
-    $modeleId = $request->query->get('modele');
-    $voiture = [];
-    if ($modeleId) {
-        $voitures = $vr->findByModele((int)$modeleId);
+    #[Route('/voitures/par-modele', name: 'voitures_par_modele')]
+    public function voitureParModele(Request $request, EntityManagerInterface $em, VoitureRepository $vr): Response
+    {
+        $modeleId = $request->query->get('modele');
+        $voitures = [];
+
+        if ($modeleId) {
+        $voitures = $vr->findByModele((int) $modeleId);
     }
 
-    $modeles = $em->getRepository(Modele::class)->findAll();
-    return $this->render('voiture/voitureParModele.html.twig', [
-        'voitures' => $voiture,
-        'modeles' => $modeles,
-        'selectedModele' => $modeleId,
-    ]);
+        $modeles = $em->getRepository(Modele::class)->findAll();
+        return $this->render('voiture/voitureParModele.html.twig', [
+            'voitures' => $voitures,
+            'modeles' => $modeles,
+            'selectedModele' => $modeleId,
+        ]);
 }
 }

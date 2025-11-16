@@ -22,31 +22,22 @@ class Voiture
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $Date_Mise_En_Marche = null;
 
-    #[ORM\Column(length: 255)]
-
     #[ORM\Column]
     private ?float $Prix_jour = null;
-
-    /**
-     * @var Collection<int, Location>
-     */
-    #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'Voiture')]
-    private Collection $locations;
-
-    /**
-     * @var Collection<int, Location>
-     */
-    #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'voiture')]
-    private Collection $location;
 
     #[ORM\ManyToOne(inversedBy: 'voitures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Modele $modele = null;
 
+    /**
+     * @var Collection<int, Location>
+     */
+    #[ORM\OneToMany(targetEntity: Location::class, mappedBy: 'voiture')]
+    private Collection $locations;
+
     public function __construct()
     {
         $this->locations = new ArrayCollection();
-        $this->location = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,7 +53,6 @@ class Voiture
     public function setSerie(string $serie): static
     {
         $this->serie = $serie;
-
         return $this;
     }
 
@@ -71,22 +61,9 @@ class Voiture
         return $this->Date_Mise_En_Marche;
     }
 
-    public function setDateMiseEnMarche(\DateTime $Date_Mise_En_Marche): static
+    public function setDateMiseEnMarche(\DateTime $date): static
     {
-        $this->Date_Mise_En_Marche = $Date_Mise_En_Marche;
-
-        return $this;
-    }
-
-    public function getModele(): ?string
-    {
-        return $this->Modele;
-    }
-
-    public function setModele(string $Modele): static
-    {
-        $this->Modele = $Modele;
-
+        $this->Date_Mise_En_Marche = $date;
         return $this;
     }
 
@@ -95,10 +72,20 @@ class Voiture
         return $this->Prix_jour;
     }
 
-    public function setPrixJour(float $Prix_jour): static
+    public function setPrixJour(float $prix): static
     {
-        $this->Prix_jour = $Prix_jour;
+        $this->Prix_jour = $prix;
+        return $this;
+    }
 
+    public function getModele(): ?Modele
+    {
+        return $this->modele;
+    }
+
+    public function setModele(?Modele $modele): static
+    {
+        $this->modele = $modele;
         return $this;
     }
 
@@ -123,20 +110,11 @@ class Voiture
     public function removeLocation(Location $location): static
     {
         if ($this->locations->removeElement($location)) {
-            // set the owning side to null (unless already changed)
             if ($location->getVoiture() === $this) {
                 $location->setVoiture(null);
             }
         }
 
         return $this;
-    }
-
-    /**
-     * @return Collection<int, Location>
-     */
-    public function getLocation(): Collection
-    {
-        return $this->location;
     }
 }
